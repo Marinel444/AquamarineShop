@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load query_transform %}
+{% load crispy_forms_filters %}
+
+
+{% block content %}
+  <style>
+      .product__items--img {
+          width: 282px;
+          height: 295px;
+          object-fit: cover;
+      }
+  </style>
+  <main class="main__content_wrapper">
+
+    <!-- Start breadcrumb section -->
+    <section class="breadcrumb__section breadcrumb__bg">
+      <div class="container">
+        <div class="row row-cols-1">
+          <div class="col">
+            <div class="breadcrumb__content">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End breadcrumb section -->
+
+    <!-- Start shop section -->
+    <section class="shop__section section--padding">
+      <div class="container">
+        <div class="row">
+          <div class="col-12" style="text-align: center">
+            <h1>Удалить товар ?</h1><br>
+            <form action="" method="post">
+              {% csrf_token %}
+
+              <input type="submit" value="Так" class="btn btn-danger">
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End shop section -->
+
+  </main>
+
+
+  <!-- Scroll top bar -->
+  <button id="scroll__top">
+    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48"
+            d="M112 244l144-144 144 144M256 120v292"/>
+    </svg>
+  </button>
+
+{% endblock %}

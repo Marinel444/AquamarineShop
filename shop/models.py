@@ -16,7 +16,7 @@ class Category(models.Model):
 
 
 class SubCategory(models.Model):
-    category = models.ForeignKey(Category, related_name="subcategory", on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name="sub_category", on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     slug = models.CharField(max_length=100, unique=True)
 

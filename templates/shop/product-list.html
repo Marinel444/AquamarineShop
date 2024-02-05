@@ -17,29 +17,59 @@
         <path fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
               stroke-width="32" d="M368 368L144 144M368 144L144 368"></path>
       </svg>
-      <span class="offcanvas__filter--close__text">Закрыть</span>
+      <span class="offcanvas__filter--close__text">Закрити</span>
     </button>
     <div class="offcanvas__filter--sidebar__inner">
       <div class="single__widget widget__bg">
-        <h2 class="widget__title position__relative h3">Поиск</h2>
+        <h2 class="widget__title position__relative h3">Пошук</h2>
         <form method="get" class="widget__search--form" action="">
           <label>
-            <input class="widget__search--form__input" name="search" placeholder="Название" type="text">
+            <input class="widget__search--form__input" name="search" placeholder="Назва" type="text">
           </label>
           {% for key, value in request.GET.items %}
             {% if key != 'search' %}
               <input type="hidden" name="{{ key }}" value="{{ value }}">
             {% endif %}
           {% endfor %}
-          <button class="widget__search--form__btn" type="submit">Поиск</button>
+          <button class="widget__search--form__btn" type="submit">Пошук</button>
         </form>
       </div>
+      <div class="single__widget widget__bg">
+        <h2 class="widget__title position__relative h3">Категорiй</h2>
+        <ul class="widget__categories--menu">
+          {% for category in categories %}
+            <li class="widget__categories--menu__list">
+              <label class="widget__categories--menu__label d-flex align-items-center">
+                <img class="widget__categories--menu__img" src="{% static 'img/product/small-product1.webp' %}"
+                     alt="categories-img">
+                <span class="widget__categories--menu__text">{{ category.name }}</span>
+                <svg class="widget__categories--menu__arrowdown--icon" xmlns="http://www.w3.org/2000/svg" width="12.355"
+                     height="8.394">
+                  <path d="M15.138,8.59l-3.961,3.952L7.217,8.59,6,9.807l5.178,5.178,5.178-5.178Z"
+                        transform="translate(-6 -8.59)" fill="currentColor"></path>
+                </svg>
+              </label>
+              <ul class="widget__categories--sub__menu">
+                {% for sub_cat in category.sub_category.all %}
+                  <li class="widget__categories--sub__menu--list">
+                    <a class="widget__categories--sub__menu--link d-flex align-items-center" href="{% url 'shop:product-list' slug=sub_cat.slug %}">
+                      <img class="widget__categories--sub__menu--img" src="{% static 'img/product/small-product2.webp' %}"
+                           alt="categories-img">
+                      <span class="widget__categories--sub__menu--text">{{ sub_cat.name }}</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
       <div class="single__widget price__filter widget__bg">
-        <h2 class="widget__title position__relative h3">Цена</h2>
+        <h2 class="widget__title position__relative h3">Ціна</h2>
         <form method="get" class="price__filter--form" action="">
           <div class="price__filter--form__inner mb-15 d-flex align-items-center">
             <div class="price__filter--group">
-              <label class="price__filter--label" for="Filter-Price-GTE2">От</label>
+              <label class="price__filter--label" for="Filter-Price-GTE2">Від</label>
               <div class="price__filter--input border-radius-5 d-flex align-items-center">
                 <span class="price__filter--currency">грн.</span>
                 <input class="price__filter--input__field border-0" id="Filter-Price-GTE2"
@@ -64,11 +94,11 @@
               <input type="hidden" name="{{ key }}" value="{{ value }}">
             {% endif %}
           {% endfor %}
-          <button class="price__filter--btn primary__btn" type="submit">Поиск</button>
+          <button class="price__filter--btn primary__btn" type="submit">Пошук</button>
         </form>
       </div>
       <div class="single__widget widget__bg">
-        <h2 class="widget__title position__relative h3">Бренды</h2>
+        <h2 class="widget__title position__relative h3">Бренди</h2>
         <ul class="widget__tagcloud">
           {% for brand in brands %}
             <li class="widget__tagcloud--list"><a class="widget__tagcloud--link"
@@ -90,12 +120,12 @@
         <div class="row row-cols-1">
           <div class="col">
             <div class="breadcrumb__content">
-              <h1 class="breadcrumb__content--title text-white mb-10">Информация</h1>
+              <h1 class="breadcrumb__content--title text-white mb-10">Інформація</h1>
               <ul class="breadcrumb__content--menu d-flex">
                 <li class="breadcrumb__content--menu__items"><a class="text-white"
-                                                                href="{% url 'shop:index' %}">Главная</a>
+                                                                href="{% url 'shop:index' %}">Головна</a>
                 </li>
-                <li class="breadcrumb__content--menu__items"><span class="text-white">Информация</span>
+                <li class="breadcrumb__content--menu__items"><span class="text-white">Інформація</span>
                 </li>
               </ul>
             </div>
@@ -112,10 +142,10 @@
           <div class="col-xl-3 col-lg-4">
             <div class="shop__sidebar--widget widget__area d-md-2-none">
               <div class="single__widget widget__bg">
-                <h2 class="widget__title position__relative h3">Поиск</h2>
+                <h2 class="widget__title position__relative h3">Пошук</h2>
                 <form method="get" action="" class="widget__search--form">
                   <label>
-                    <input class="widget__search--form__input" name="search" placeholder="Название" type="text">
+                    <input class="widget__search--form__input" name="search" placeholder="Назва" type="text">
                   </label>
                   {% for key, value in request.GET.items %}
                     {% if key != 'search' %}
@@ -123,16 +153,48 @@
                     {% endif %}
                   {% endfor %}
                   <button class="widget__search--form__btn" type="submit">
-                    Поиск
+                    Пошук
                   </button>
                 </form>
               </div>
+              <div class="single__widget widget__bg">
+                <h2 class="widget__title position__relative h3">Категорій</h2>
+                <ul class="widget__categories--menu">
+                  {% for category in categories %}
+                    <li class="widget__categories--menu__list">
+                      <label class="widget__categories--menu__label d-flex align-items-center">
+                        <img class="widget__categories--menu__img" src="{% static 'img/product/small-product1.webp' %}"
+                             alt="categories-img">
+                        <span class="widget__categories--menu__text">{{ category.name }}</span>
+                        <svg class="widget__categories--menu__arrowdown--icon" xmlns="http://www.w3.org/2000/svg"
+                             width="12.355" height="8.394">
+                          <path d="M15.138,8.59l-3.961,3.952L7.217,8.59,6,9.807l5.178,5.178,5.178-5.178Z"
+                                transform="translate(-6 -8.59)" fill="currentColor"></path>
+                        </svg>
+                      </label>
+                      <ul class="widget__categories--sub__menu">
+                        {% for sub_cat in category.sub_category.all %}
+                          <li class="widget__categories--sub__menu--list">
+                            <a class="widget__categories--sub__menu--link d-flex align-items-center"
+                               href="{% url 'shop:product-list' slug=sub_cat.slug %}">
+                              <img class="widget__categories--sub__menu--img"
+                                   src="{% static 'img/product/small-product2.webp' %}"
+                                   alt="categories-img">
+                              <span class="widget__categories--sub__menu--text">{{ sub_cat.name }}</span>
+                            </a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
               <div class="single__widget price__filter widget__bg">
-                <h2 class="widget__title position__relative h3">Цена</h2>
+                <h2 class="widget__title position__relative h3">Цiна</h2>
                 <form method="get" class="price__filter--form" action="">
                   <div class="price__filter--form__inner mb-15 d-flex align-items-center">
                     <div class="price__filter--group">
-                      <label class="price__filter--label" for="Filter-Price-GTE1">От</label>
+                      <label class="price__filter--label" for="Filter-Price-GTE1">Вiд</label>
                       <div class="price__filter--input border-radius-5 d-flex align-items-center">
                         <span class="price__filter--currency">грн.</span>
                         <input class="price__filter--input__field border-0"
@@ -158,11 +220,11 @@
                       <input type="hidden" name="{{ key }}" value="{{ value }}">
                     {% endif %}
                   {% endfor %}
-                  <button class="price__filter--btn primary__btn" type="submit">Поиск</button>
+                  <button class="price__filter--btn primary__btn" type="submit">Пошук</button>
                 </form>
               </div>
               <div class="single__widget widget__bg">
-                <h2 class="widget__title position__relative h3">Бренды</h2>
+                <h2 class="widget__title position__relative h3">Бренди</h2>
                 <ul class="widget__tagcloud">
                   {% for brand in brands %}
                     <li class="widget__tagcloud--list"><a class="widget__tagcloud--link"
@@ -188,8 +250,11 @@
                   <circle cx="336" cy="384" r="28" fill="none" stroke="currentColor"
                           stroke-linecap="round" stroke-linejoin="round" stroke-width="28"/>
                 </svg>
-                <span class="widget__filter--btn__text">Фильтр</span>
+                <span class="widget__filter--btn__text">Фільтр</span>
               </button>
+              {% if user.is_superuser %}
+              <a href="{% url 'shop:create-product' %}" type="submit" class="btn btn-info" style="position: absolute; right: 25px;">➕</a>
+              {% endif %}
               <div class="product__view--mode d-flex align-items-center">
                 <div class="product__view--mode__list">
                 </div>
@@ -240,7 +305,7 @@
                                         transform="translate(-2.667 -1.366)"
                                         fill="currentColor"></path>
                                 </svg>
-                                <span class="add__to--cart__text"> Купить</span>
+                                <span class="add__to--cart__text"> Купити</span>
                               </a>
                             </div>
                           </div>

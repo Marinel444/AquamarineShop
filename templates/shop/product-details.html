@@ -4,18 +4,19 @@
 
 {% block content %}
   <style>
-            .product__media--nav__items--img{
-                width: 100px;
-                height: 110px;
-                object-fit: cover;
-            }
-            .product__media--preview__items--img{
-                width: 570px;
-                height: 590px;
-                object-fit: cover;
-            }
-        </style>
-  
+      .product__media--nav__items--img {
+          width: 100px;
+          height: 110px;
+          object-fit: cover;
+      }
+
+      .product__media--preview__items--img {
+          width: 570px;
+          height: 590px;
+          object-fit: cover;
+      }
+  </style>
+
   <main class="main__content_wrapper">
 
     <!-- Start breadcrumb section -->
@@ -24,13 +25,13 @@
         <div class="row row-cols-1">
           <div class="col">
             <div class="breadcrumb__content">
-              <h1 class="breadcrumb__content--title text-white mb-10">Информация о продукте</h1>
+              <h1 class="breadcrumb__content--title text-white mb-10">Інформація про продукт</h1>
               <ul class="breadcrumb__content--menu d-flex">
                 <li class="breadcrumb__content--menu__items"><a class="text-white"
-                                                                href="{% url 'shop:index' %}">Главная</a>
+                                                                href="{% url 'shop:index' %}">Головна</a>
                 </li>
                 <li class="breadcrumb__content--menu__items"><span
-                        class="text-white">Информация о продукте</span></li>
+                        class="text-white">Інформація про продукт</span></li>
               </ul>
             </div>
           </div>
@@ -42,6 +43,20 @@
     <!-- Start product details section -->
     <section class="product__details--section section--padding">
       <div class="container">
+      {% if user.is_staff %}
+        <div class="row row-cols-lg-2 row-cols-md-2">
+          <div style="display: flex">
+            <a href="{% url 'shop:update-product' slug=product.slug %}" class="variant__buy--now__btn primary__btn"
+               type="submit" style="display: flex; justify-content: center;">Редактировать
+            </a>
+            <a href="{% url 'shop:delete-product' slug=product.slug %}" class="variant__buy--now__btn primary__btn"
+               style="background-color: red; display: flex; justify-content: center;" type="submit">Удалить
+            </a>
+          </div>
+
+        </div>
+        <br>
+        {% endif %}
         <div class="row row-cols-lg-2 row-cols-md-2">
           <div class="col">
             <div class="product__details--media">
@@ -168,7 +183,7 @@
                 <div class="product__variant">
                   <div class="product__variant--list mb-20">
                     <fieldset class="variant__input--fieldset">
-                      <legend class="product__variant--title mb-8">Размер
+                      <legend class="product__variant--title mb-8">Розмір
                         : {{ product.size }}</legend>
                     </fieldset>
                   </div>
@@ -176,24 +191,24 @@
                     <div class="product__details--info__meta">
                       <p class="product__details--info__meta--list"><strong>Артикул:</strong>
                         <span>{{ product.article }}</span></p>
-                      <p class="product__details--info__meta--list"><strong>Страна:</strong>
+                      <p class="product__details--info__meta--list"><strong>Країна:</strong>
                         <span>{{ product.country.name }}</span>
                       </p>
                       <p class="product__details--info__meta--list">
-                        <strong>Производитель:</strong>
+                        <strong>Бренд:</strong>
                         <span>{{ product.brand.name }}</span></p>
                       <p class="product__details--info__meta--list">
-                        <strong>Материал:</strong>
+                        <strong>Матеріал:</strong>
                         <span>{{ product.material }}</span></p>
                       <p class="product__details--info__meta--list">
-                        <strong>Цвет:</strong>
+                        <strong>Колір:</strong>
                         <span>{{ product.color }}</span></p>
                       <br>
                     </div>
                   </div>
 
                   <div class="product__variant--list mb-15">
-                    <button class="variant__buy--now__btn primary__btn" type="submit">Купить
+                    <button class="variant__buy--now__btn primary__btn" type="submit">Купити
                     </button>
                   </div>
                 </div>
@@ -220,8 +235,8 @@
                 Описание
               </li>
               {% if product.brand.description %}
-              <li class="product__details--tab__list" data-toggle="tab" data-target="#custom">Производитель
-              </li>
+                <li class="product__details--tab__list" data-toggle="tab" data-target="#custom">Виробник
+                </li>
               {% endif %}
             </ul>
             <div class="product__details--tab__inner border-radius-10">
@@ -231,11 +246,11 @@
                     <div class="product__tab--content__step mb-30">
                       <h4 class="product__tab--content__title mb-10">{{ product.name }}</h4>
                       <p class="product__tab--content__desc">
-                        <b>Страна производитель: </b> {{ product.country.name }}<br>
-                        <b>Размер: </b> {{ product.size }}<br>
-                        <b>Цвет: </b> {{ product.color }}<br>
-                        <b>Материал: </b> {{ product.material }}<br>
-                        <b>Предназначение: </b> {{ product.sub_category.name }}<br><br>
+                        <b>Країна виробник: </b> {{ product.country.name }}<br>
+                        <b>Розмір: </b> {{ product.size }}<br>
+                        <b>Колір: </b> {{ product.color }}<br>
+                        <b>Матеріал: </b> {{ product.material }}<br>
+                        <b>Призначення: </b> {{ product.sub_category.name }}<br><br>
                         {{ product.description }}</p>
                     </div>
                   </div>
@@ -245,8 +260,8 @@
                     <div class="product__tab--content__items mb-40 d-flex align-items-center">
                       <div class="product__tab--content__thumbnail">
                         {% if product.brand.photo %}
-                        <img class="product__tab--content__thumbnail--img display-block"
-                             src="{{ product.brand.photo.url }}" alt="product-tab">
+                          <img class="product__tab--content__thumbnail--img display-block"
+                               src="{{ product.brand.photo.url }}" alt="product-tab">
                         {% endif %}
                       </div>
                       <div class="product__tab--content__right">
