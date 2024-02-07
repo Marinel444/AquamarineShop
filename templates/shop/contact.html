@@ -81,7 +81,8 @@
                       </svg>
                     </div>
                     <div class="contact__info--content">
-                      <p class="contact__info--content__desc text-white"> Закарпатська обл. смт.Солотвино, вул.Спортивна 110</p>
+                      <p class="contact__info--content__desc text-white"> Закарпатська обл. смт.Солотвино, вул.Спортивна
+                        110</p>
                     </div>
                   </div>
                 </div>
@@ -116,52 +117,54 @@
             </div>
             <div class="col-lg-7">
               <div class="contact__form">
-                <form class="contact__form--inner" action="#">
+                <form method="post" class="contact__form--inner" action="">
+                  {% csrf_token %}
                   <div class="row">
                     <div class="col-lg-6 col-md-6">
+                      
                       <div class="contact__form--list mb-20">
-                        <label class="contact__form--label" for="input1">Ім'я <span
+                        <label class="contact__form--label" for="id_first_name"
+                                {% if form.first_name.errors %}style="color: red"{% endif %}>Ім'я <span
                                 class="contact__form--label__star">*</span></label>
-                        <input class="contact__form--input" name="firstname" id="input1" placeholder="Ім'я"
+                        <input class="contact__form--input " name="first_name" id="id_first_name" placeholder="Ім'я"
                                type="text">
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
                       <div class="contact__form--list mb-20">
-                        <label class="contact__form--label" for="input2">Прізвище <span
-                                class="contact__form--label__star">*</span></label>
-                        <input class="contact__form--input" name="lastname" id="input2" placeholder="Прізвище"
+                        <label class="contact__form--label" for="id_last_name"
+                        {% if form.last_name.errors %}style="color: red"{% endif %}>Прізвище </label>
+                        <input class="contact__form--input" name="lastname" id="id_last_name" placeholder="Прізвище"
                                type="text">
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
                       <div class="contact__form--list mb-20">
-                        <label class="contact__form--label" for="input3">Номер телефону <span
+                        <label class="contact__form--label" for="id_phone_number"
+                        {% if form.phone_number.errors %}style="color: red"{% endif %}>Номер телефону <span
                                 class="contact__form--label__star">*</span></label>
-                        <input class="contact__form--input" name="number" id="input3" placeholder="Номер телефону"
+                        <input class="contact__form--input" name="phone_number" id="id_phone_number"
+                               placeholder="Номер телефону"
                                type="text">
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
                       <div class="contact__form--list mb-20">
-                        <label class="contact__form--label" for="input4">Email <span class="contact__form--label__star">*</span></label>
-                        <input class="contact__form--input" name="email" id="input4" placeholder="Email" type="text">
+                        <label class="contact__form--label" for="id_email"
+                        {% if form.email.errors %}style="color: red"{% endif %}>Email </label>
+                        <input class="contact__form--input" name="email" id="id_email" placeholder="Email"
+                               type="text">
                       </div>
                     </div>
                     <div class="col-12">
                       <div class="contact__form--list mb-10">
-                        <label class="contact__form--label" for="input5">Повідомлення <span
+                        <label class="contact__form--label" for="id_message"
+                        {% if form.message.errors %}style="color: red"{% endif %}>Повідомлення <span
                                 class="contact__form--label__star">*</span></label>
-                        <textarea class="contact__form--textarea" name="message" id="input5"
-                                  placeholder="Сообщение"></textarea>
+                        <textarea class="contact__form--textarea" name="message" id="id_message"
+                                  placeholder="Повідомлення"></textarea>
                       </div>
                     </div>
-                  </div>
-                  <div class="account__login--remember position__relative mb-15">
-                    <input class="checkout__checkbox--input" id="check2" type="checkbox">
-                    <span class="checkout__checkbox--checkmark"></span>
-                    <label class="checkout__checkbox--label login__remember--label" for="check2">
-                      Accept Terms & Condition</label>
                   </div>
                   <button class="contact__form--btn primary__btn" type="submit">Надіслати</button>
                   <p class="form-messege"></p>

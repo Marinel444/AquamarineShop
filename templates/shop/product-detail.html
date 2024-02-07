@@ -43,19 +43,19 @@
     <!-- Start product details section -->
     <section class="product__details--section section--padding">
       <div class="container">
-      {% if user.is_staff %}
-        <div class="row row-cols-lg-2 row-cols-md-2">
-          <div style="display: flex">
-            <a href="{% url 'shop:update-product' slug=product.slug %}" class="variant__buy--now__btn primary__btn"
-               type="submit" style="display: flex; justify-content: center;">Редактировать
-            </a>
-            <a href="{% url 'shop:delete-product' slug=product.slug %}" class="variant__buy--now__btn primary__btn"
-               style="background-color: red; display: flex; justify-content: center;" type="submit">Удалить
-            </a>
-          </div>
+        {% if user.is_staff %}
+          <div class="row row-cols-lg-2 row-cols-md-2">
+            <div style="display: flex">
+              <a href="{% url 'shop:update-product' slug=product.slug %}" class="variant__buy--now__btn primary__btn"
+                 type="submit" style="display: flex; justify-content: center;">Редактировать
+              </a>
+              <a href="{% url 'shop:delete-product' slug=product.slug %}" class="variant__buy--now__btn primary__btn"
+                 style="background-color: red; display: flex; justify-content: center;" type="submit">Удалить
+              </a>
+            </div>
 
-        </div>
-        <br>
+          </div>
+          <br>
         {% endif %}
         <div class="row row-cols-lg-2 row-cols-md-2">
           <div class="col">
@@ -208,8 +208,11 @@
                   </div>
 
                   <div class="product__variant--list mb-15">
-                    <button class="variant__buy--now__btn primary__btn" type="submit">Купити
-                    </button>
+
+                    <a href="{% url 'shop:order-product' slug=product.slug %}"
+                       class="variant__buy--now__btn primary__btn" style="display: flex; justify-content: center;"
+                       type="submit">Купити
+                    </a>
                   </div>
                 </div>
                 <div class="guarantee__safe--checkout">

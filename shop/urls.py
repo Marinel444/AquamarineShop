@@ -6,10 +6,11 @@ from shop.views import (
     ProductDetailView,
     ProductListView,
     Search,
-    contact_us,
+    ContactView,
     ProductCreateView,
     ProductUpdateView,
     ProductDeleteView,
+    ProductOrderView,
 )
 
 urlpatterns = [
@@ -18,10 +19,11 @@ urlpatterns = [
     path("product/<slug:slug>/", ProductDetailView.as_view(), name="product-detail"),
     path("product/<slug:slug>/update/", ProductUpdateView.as_view(), name="update-product"),
     path("product/<slug:slug>/delete/", ProductDeleteView.as_view(), name="delete-product"),
+    path("product/<slug:slug>/order/", ProductOrderView.as_view(), name="order-product"),
     path("shop/", ProductListView.as_view(), name="shop-list"),
     path("shop/<slug:slug>/", ProductListView.as_view(), name="product-list"),
     path("search/", Search.as_view(), name="search"),
-    path("contact/", contact_us, name="contact"),
+    path("contact/", ContactView.as_view(), name="contact"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 app_name = "shop"

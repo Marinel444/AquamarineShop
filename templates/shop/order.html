@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <main class="main__content_wrapper">
+
+    <!-- Start breadcrumb section -->
+    <section class="breadcrumb__section breadcrumb__bg">
+      <div class="container">
+        <div class="row row-cols-1">
+          <div class="col">
+            <div class="breadcrumb__content">
+              <h1 class="breadcrumb__content--title text-white mb-10">Замовлення товару</h1>
+              <ul class="breadcrumb__content--menu d-flex">
+                <li class="breadcrumb__content--menu__items"><a class="text-white"
+                                                                href="{% url 'shop:index' %}">Головна</a></li>
+                <li class="breadcrumb__content--menu__items"><span class="text-white">Замовлення товару</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End breadcrumb section -->
+
+    <section class="shop__section section--padding">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="shop__product--wrapper">
+              <div class="tab_content">
+                <div id="product_list" class="tab_pane active show">
+                  <div class="product__section--inner">
+                    <div class="row row-cols-1 mb--n30">
+                      <div class="col mb-30">
+                        <div class="product__items product__list--items border-radius-5 d-flex align-items-center">
+                          <div class="product__list--items__left d-flex align-items-center">
+                            <div class="product__items--thumbnail product__list--items__thumbnail">
+                              <a class="product__items--link" href="{% url 'shop:product-detail' slug=product.slug %}">
+                                {% for photo in product.photo_set.all|slice:":2" %}
+                                  {% if forloop.counter == 1 %}
+                                    <img class="product__items--img product__primary--img"
+                                         src="{{ photo.image.url }}" alt="product-img">
+                                  {% elif forloop.counter == 2 %}
+                                    <img class="product__items--img product__secondary--img"
+                                         src="{{ photo.image.url }}" alt="product-img">
+                                  {% endif %}
+                                {% endfor %}
+                              </a>
+                              {% if product.sale %}
+                                <div class="product__badge">
+                                  <span class="product__badge--items sale">Sale</span>
+                                </div>
+                              {% endif %}
+                            </div>
+                            <div class="product__list--items__content">
+                              <h4 class="product__list--items__content--title mb-15"><a
+                                      href="{% url 'shop:product-detail' slug=product.slug %}">{{ product.name }}</a>
+                              </h4>
+                              <p class="product__list--items__content--desc m-0">
+                                <b>Країнавиробник: </b> {{ product.country.name }}<br>
+                                <b>Розмір: </b> {{ product.size }}<br>
+                                <b>Колір: </b> {{ product.color }}<br>
+                                <b>Матеріал: </b> {{ product.material }}<br>
+                                <b>Призначення: </b> {{ product.sub_category.name }}<br><br></p>
+                            </div>
+                          </div>
+                          <div class="product__list--items__right">
+                            {% if product.sale %}
+                              <span class="product__list--current__price"
+                                    style="color: red">{{ product.sale }} грн.</span>
+                            {% else %}
+                              <span class="product__list--current__price">{{ product.price }} грн.</span>
+                            {% endif %}
+                            <ul class="rating product__list--rating d-flex">
+                              <li class="rating__list">
+                                                                <span class="rating__list--icon">
+                                                                    <svg class="rating__list--icon__svg"
+                                                                         xmlns="http://www.w3.org/2000/svg"
+                                                                         width="11.105" height="11.732"
+                                                                         viewBox="0 0 10.105 9.732">
+                                                                    <path data-name="star - Copy"
+                                                                          d="M9.837,3.5,6.73,3.039,5.338.179a.335.335,0,0,0-.571,0L3.375,3.039.268,3.5a.3.3,0,0,0-.178.514L2.347,6.242,1.813,9.4a.314.314,0,0,0,.464.316L5.052,8.232,7.827,9.712A.314.314,0,0,0,8.292,9.4L7.758,6.242l2.257-2.231A.3.3,0,0,0,9.837,3.5Z"
+                                                                          transform="translate(0 -0.018)"
+                                                                          fill="currentColor"></path>
+                                                                    </svg>
+                                                                </span>
+                              </li>
+                              <li class="rating__list">
+                                                                <span class="rating__list--icon">
+                                                                    <svg class="rating__list--icon__svg"
+                                                                         xmlns="http://www.w3.org/2000/svg"
+                                                                         width="11.105" height="11.732"
+                                                                         viewBox="0 0 10.105 9.732">
+                                                                    <path data-name="star - Copy"
+                                                                          d="M9.837,3.5,6.73,3.039,5.338.179a.335.335,0,0,0-.571,0L3.375,3.039.268,3.5a.3.3,0,0,0-.178.514L2.347,6.242,1.813,9.4a.314.314,0,0,0,.464.316L5.052,8.232,7.827,9.712A.314.314,0,0,0,8.292,9.4L7.758,6.242l2.257-2.231A.3.3,0,0,0,9.837,3.5Z"
+                                                                          transform="translate(0 -0.018)"
+                                                                          fill="currentColor"></path>
+                                                                    </svg>
+                                                                </span>
+                              </li>
+                              <li class="rating__list">
+                                                                <span class="rating__list--icon">
+                                                                    <svg class="rating__list--icon__svg"
+                                                                         xmlns="http://www.w3.org/2000/svg"
+                                                                         width="11.105" height="11.732"
+                                                                         viewBox="0 0 10.105 9.732">
+                                                                    <path data-name="star - Copy"
+                                                                          d="M9.837,3.5,6.73,3.039,5.338.179a.335.335,0,0,0-.571,0L3.375,3.039.268,3.5a.3.3,0,0,0-.178.514L2.347,6.242,1.813,9.4a.314.314,0,0,0,.464.316L5.052,8.232,7.827,9.712A.314.314,0,0,0,8.292,9.4L7.758,6.242l2.257-2.231A.3.3,0,0,0,9.837,3.5Z"
+                                                                          transform="translate(0 -0.018)"
+                                                                          fill="currentColor"></path>
+                                                                    </svg>
+                                                                </span>
+                              </li>
+                              <li class="rating__list">
+                                                                <span class="rating__list--icon">
+                                                                    <svg class="rating__list--icon__svg"
+                                                                         xmlns="http://www.w3.org/2000/svg"
+                                                                         width="11.105" height="11.732"
+                                                                         viewBox="0 0 10.105 9.732">
+                                                                    <path data-name="star - Copy"
+                                                                          d="M9.837,3.5,6.73,3.039,5.338.179a.335.335,0,0,0-.571,0L3.375,3.039.268,3.5a.3.3,0,0,0-.178.514L2.347,6.242,1.813,9.4a.314.314,0,0,0,.464.316L5.052,8.232,7.827,9.712A.314.314,0,0,0,8.292,9.4L7.758,6.242l2.257-2.231A.3.3,0,0,0,9.837,3.5Z"
+                                                                          transform="translate(0 -0.018)"
+                                                                          fill="currentColor"></path>
+                                                                    </svg>
+                                                                </span>
+                              </li>
+                              <li class="rating__list">
+                                                                <span class="rating__list--icon">
+                                                                    <svg class="rating__list--icon__svg"
+                                                                         xmlns="http://www.w3.org/2000/svg"
+                                                                         width="11.105" height="11.732"
+                                                                         viewBox="0 0 10.105 9.732">
+                                                                    <path data-name="star - Copy"
+                                                                          d="M9.837,3.5,6.73,3.039,5.338.179a.335.335,0,0,0-.571,0L3.375,3.039.268,3.5a.3.3,0,0,0-.178.514L2.347,6.242,1.813,9.4a.314.314,0,0,0,.464.316L5.052,8.232,7.827,9.712A.314.314,0,0,0,8.292,9.4L7.758,6.242l2.257-2.231A.3.3,0,0,0,9.837,3.5Z"
+                                                                          transform="translate(0 -0.018)"
+                                                                          fill="currentColor"></path>
+                                                                    </svg>
+                                                                </span>
+                              </li>
+                              <li class="rating__list"><span class="rating__list--text">( 5.0)</span></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Start contact section -->
+    <section class="contact__section section--padding">
+      <div class="container">
+        <div class="section__heading mb-40">
+          <h2 class="section__heading--maintitle contact__section--hrading mb-10">Залишіть свої дані і ми зв'яжемося з
+            вами</h2>
+
+        </div>
+        <div class="main__contact--area">
+          <div class="row align-items-center row-md-reverse">
+
+            <div class="col-lg-7">
+              <div class="contact__form">
+                <form method="post" class="contact__form--inner" action="">
+                  {% csrf_token %}
+                  <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                      <div class="contact__form--list mb-20">
+                        <label class="contact__form--label" for="id_name"
+                                {% if form.name.errors %}style="color: red"{% endif %}>Ім'я <span
+                                class="contact__form--label__star">*</span></label>
+                        <input class="contact__form--input" name="name" id="id_name" placeholder="Ім'я"
+                               type="text">
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                      <div class="contact__form--list mb-20">
+                        <label class="contact__form--label" for="id_phone_number"
+                                {% if form.phone_number.errors %}style="color: red"{% endif %}>Номер
+                          телефону <span
+                                  class="contact__form--label__star">*</span></label>
+                        <input class="contact__form--input" name="phone_number" id="id_phone_number"
+                               placeholder="Номер телефону"
+                               type="text">
+                      </div>
+                    </div>
+                  </div>
+                  <button class="contact__form--btn primary__btn" type="submit">Надіслати</button>
+                  <p class="form-messege"></p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End contact section -->
+
+
+  </main>
+
+  <!-- Scroll top bar -->
+  <button id="scroll__top">
+    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48"
+            d="M112 244l144-144 144 144M256 120v292"/>
+    </svg>
+  </button>
+
+
+{% endblock %}
