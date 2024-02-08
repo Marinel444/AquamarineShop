@@ -53,8 +53,7 @@
                 {% for sub_cat in category.sub_category.all %}
                   <li class="widget__categories--sub__menu--list">
                     <a class="widget__categories--sub__menu--link d-flex align-items-center" href="{% url 'shop:product-list' slug=sub_cat.slug %}">
-                      <img class="widget__categories--sub__menu--img" src="{% static 'img/product/small-product2.webp' %}"
-                           alt="categories-img">
+                      
                       <span class="widget__categories--sub__menu--text">{{ sub_cat.name }}</span>
                     </a>
                   </li>

@@ -44,6 +44,11 @@ class Country(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ("name",)
+        verbose_name = "Страна"
+        verbose_name_plural = "Страны"
+
 
 class Brand(models.Model):
     name = models.CharField(max_length=255)
@@ -52,6 +57,11 @@ class Brand(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ("name",)
+        verbose_name = "Бренд"
+        verbose_name_plural = "Бренды"
 
 
 class Product(models.Model):
@@ -104,3 +114,7 @@ class Product(models.Model):
 class Photo(models.Model):
     product = models.ForeignKey(Product, verbose_name="photo", on_delete=models.CASCADE)
     image = models.ImageField(upload_to=f"product/%Y/%m/%d/")
+
+    class Meta:
+        verbose_name = "Фото"
+        verbose_name_plural = "Фотографий"

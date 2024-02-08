@@ -14,7 +14,3 @@ def ukrainian_to_latin(text):
         'ъ': '', 'ы': 'y', 'э': 'e', 'ё': 'e'
     }
     return ''.join(transliteration_table.get(c, c) for c in text)
-
-def slugify_ukrainian(text):
-    text = ukrainian_to_latin(text)
-    return slugify(text, allow_unicode=False)
