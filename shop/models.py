@@ -1,4 +1,7 @@
 from django.db import models
+from django.utils.text import slugify
+
+from shop.utils import ukrainian_to_latin
 
 
 class Category(models.Model):
@@ -18,7 +21,13 @@ class Category(models.Model):
 class SubCategory(models.Model):
     category = models.ForeignKey(Category, related_name="sub_category", on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    slug = models.CharField(max_length=100, unique=True)
+    slug = models.CharField(max_length=100, unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            translate_slug = ukrainian_to_latin(self.name)
+            self.slug = slugify(translate_slug, allow_unicode=True)
+        super(SubCategory, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ("name",)
