@@ -11,6 +11,7 @@ from shop.views import (
     ProductUpdateView,
     ProductDeleteView,
     ProductOrderView,
+    order_mail,
 )
 
 urlpatterns = [
@@ -24,6 +25,7 @@ urlpatterns = [
     path("shop/<slug:slug>/", ProductListView.as_view(), name="product-list"),
     path("search/", Search.as_view(), name="search"),
     path("contact/", ContactView.as_view(), name="contact"),
+    path("order_mail/", order_mail, name="order-mail"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 app_name = "shop"

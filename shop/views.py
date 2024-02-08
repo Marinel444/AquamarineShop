@@ -1,12 +1,22 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.db.models import Q, Prefetch
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
 from shop.forms import ProductForm, PhotoFormSet, ContactForm, OrderForm
 from shop.models import Product, Brand, Category
+
+
+def order_mail(request):
+    context = {
+        "product": Product.objects.get(pk=1),
+        "name": "Marinel",
+        "phone_number": "+380978907444",
+    }
+    return render(request, 'emails/order-for-email.html', context)
 
 
 def index(request):
@@ -65,19 +75,24 @@ class ProductOrderView(generic.DetailView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = OrderForm(request.POST)
+        form = self.form_class(request.POST)
         if form.is_valid():
             name = form.cleaned_data["name"]
             phone_number = form.cleaned_data["phone_number"]
-            message = (f"Имя: {name}\n"
-                       f"Номер телефона: {phone_number}\n"
-                       f"Название товара: {self.get_object().name}")
-            send_mail(
+            context = {
+                "product": self.object,
+                "name": name,
+                "phone_number": phone_number,
+            }
+            html_context = render_to_string("emails/order-for-email.html", context)
+            email = EmailMessage(
                 "Новый заказ!",
-                message,
+                html_context,
                 "aquamarine.solotvino@gmail.com",
-                ["aquamarine.solotvino@gmail.com"]
+                ["aquamarine.solotvino@gmail.com"],
             )
+            email.content_subtype = "html"
+            email.send()
             return redirect(reverse("shop:index"))
         context = self.get_context_data(object=self.object, form=form)
         return self.render_to_response(context)

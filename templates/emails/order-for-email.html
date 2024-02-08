@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>AQUAMARINE</title>
+  {% load static %}
+  <meta name="description" content="Morden Bootstrap HTML5 Template">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+  <!-- ======= All CSS Plugins here ======== -->
+  <link rel="stylesheet" href="{% static 'css/plugins/swiper-bundle.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/plugins/glightbox.min.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+        rel="stylesheet">
+
+  <!-- Plugin css -->
+  <link rel="stylesheet" href="{% static 'css/vendor/bootstrap.min.css' %}">
+
+  <!-- Custom Style CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<section class="shop__section section--padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="shop__product--wrapper">
+          <div class="tab_content">
+            <div id="product_list" class="tab_pane active show">
+              <div class="product__section--inner">
+                <div class="row row-cols-1 mb--n30">
+                  <div class="col mb-30">
+                    <div class="product__items product__list--items border-radius-5 d-flex align-items-center">
+                      <div class="product__list--items__left d-flex align-items-center">
+                        <div class="product__items--thumbnail product__list--items__thumbnail">
+                          <a class="product__items--link" href="http://127.0.0.1:8000{% url 'shop:product-detail' slug=product.slug %}">
+                            {% for photo in product.photo_set.all|slice:":1" %}
+                              <img class="product__items--img product__primary--img"
+                                   src="http://127.0.0.1:8000{{ photo.image.url }}" alt="product-img">
+                            {% endfor %}
+                          </a>
+                        </div>
+                        <div class="product__list--items__content">
+                          <h4 class="product__list--items__content--title mb-15"><a
+                                  href="http://127.0.0.1:8000{% url 'shop:product-detail' slug=product.slug %}">{{ product.name }}"</a>
+                          </h4>
+                          <p class="product__list--items__content--desc m-0">
+                            <b>Країнавиробник: </b> {{ product.country.name }}<br>
+                            <b>Розмір: </b> {{ product.size }}<br>
+                            <b>Колір: </b> {{ product.color }}<br>
+                            <b>Матеріал: </b> {{ product.material }}<br>
+                            <b>Призначення: </b> {{ product.sub_category.name }}<br>
+                            <b>Цена:</b> {% if product.sale %}
+                            <span class="product__list--current__price"
+                                  style="color: red">{{ product.sale }} грн.</span>
+                          {% else %}
+                            <span class="product__list--current__price">{{ product.price }} грн.</span>
+                          {% endif %}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="product__list--items__right">
+                        <h4>Данные клиента</h4>
+                        <p>
+                          Имя: <br> <b>{{ name }}</b>
+                          <br><br>
+                          Номер телефона: <br>
+                          <b>{{ phone_number }}</b>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="{% static 'js/script.js' %}" defer="defer"></script>
+</body>
+</html>
