@@ -6,7 +6,7 @@ from shop.utils import ukrainian_to_latin
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.CharField(max_length=100, unique=True)
+    slug = models.CharField(max_length=100, unique=True, blank=True)
     photo = models.ImageField(upload_to="img/category_photo/", default="img/icon-default.png")
 
     class Meta:
@@ -16,6 +16,12 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            translate_slug = ukrainian_to_latin(self.name)
+            self.slug = slugify(translate_slug, allow_unicode=True)
+        super(Category, self).save(*args, **kwargs)
 
 
 class SubCategory(models.Model):
@@ -66,7 +72,7 @@ class Brand(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, blank=True)
     category = models.ForeignKey(
         Category,
         related_name="product",
@@ -109,6 +115,12 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            translate_slug = ukrainian_to_latin(self.name)
+            self.slug = slugify(translate_slug, allow_unicode=True)
+        super(Product, self).save(*args, **kwargs)
 
 
 class Photo(models.Model):
