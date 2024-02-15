@@ -1,3 +1,24 @@
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+
+
+def send_order_email(name, phone_number, products, email_template="emails/order-for-email.html"):
+    context = {
+        "products": products,
+        "name": name,
+        "phone_number": phone_number,
+    }
+    html_content = render_to_string(email_template, context)
+    email = EmailMessage(
+        "Новый заказ!",
+        html_content,
+        "aquamarine.solotvino@gmail.com",
+        ["aquamarine.solotvino@gmail.com"],
+    )
+    email.content_subtype = "html"
+    email.send()
+
+
 def ukrainian_to_latin(text):
     transliteration_table = {
         'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'H', 'Ґ': 'G', 'Д': 'D',

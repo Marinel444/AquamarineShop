@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <main class="main__content_wrapper">
+
+    <!-- Start error section -->
+    <section class="error__section section--padding">
+      <div class="container">
+        <div class="row row-cols-1">
+          <div class="col">
+            <div class="error__content text-center">
+              <img class="error__content--img mb-50" src="{% static 'img/other/success_img.png' %}" alt="error-img">
+              <h2 class="error__content--title">Повідомлення відправлено ! </h2>
+              <p class="error__content--desc">Ми отримали ваші дані та товар, який ви вибрали. <br> Найближчим часом з вами зв'яжеться наш менеджер :)</p>
+              <a class="error__content--btn primary__btn" href="{% url 'shop:index' %}">На головну</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End error section -->
+
+  </main>
+
+  <!-- Scroll top bar -->
+  <button id="scroll__top">
+    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48"
+            d="M112 244l144-144 144 144M256 120v292"/>
+    </svg>
+  </button>
+
+ 
+{% endblock %}

@@ -9,6 +9,7 @@ from django.views import generic
 
 from shop.forms import ProductForm, PhotoFormSet, ContactForm, OrderForm
 from shop.models import Product, Brand, Category
+from shop.utils import send_order_email
 
 
 def index(request):
@@ -25,6 +26,10 @@ def index(request):
         "categories": categories,
     }
     return render(request, "index.html", context)
+
+
+def success_view(request):
+    return render(request, "shop/success.html")
 
 
 def toggle_item_session(request, product_pk, session_key):
@@ -92,28 +97,42 @@ class CartListView(generic.ListView):
             queryset = Product.objects.none()
         return queryset
 
+    # def post(self, request, *args, **kwargs):
+    #     products = self.get_queryset()
+    #     form = self.form_class(request.POST)
+    #     if form.is_valid():
+    #         name = form.cleaned_data["name"]
+    #         phone_number = form.cleaned_data["phone_number"]
+    #         context = {
+    #             "products": products,
+    #             "name": name,
+    #             "phone_number": phone_number,
+    #         }
+    #         html_context = render_to_string("emails/order-for-email.html", context)
+    #         email = EmailMessage(
+    #             "Новый заказ!",
+    #             html_context,
+    #             "aquamarine.solotvino@gmail.com",
+    #             ["aquamarine.solotvino@gmail.com"],
+    #         )
+    #         email.content_subtype = "html"
+    #         email.send()
+    #         request.session["cart"] = []
+    #         return redirect(reverse("shop:success"))
+    #     context = self.get_context_data(form=form)
+    #     return self.render_to_response(context)
+
     def post(self, request, *args, **kwargs):
         products = self.get_queryset()
         form = self.form_class(request.POST)
         if form.is_valid():
-            name = form.cleaned_data["name"]
-            phone_number = form.cleaned_data["phone_number"]
-            context = {
-                "products": products,
-                "name": name,
-                "phone_number": phone_number,
-            }
-            html_context = render_to_string("emails/order-for-email.html", context)
-            email = EmailMessage(
-                "Новый заказ!",
-                html_context,
-                "aquamarine.solotvino@gmail.com",
-                ["aquamarine.solotvino@gmail.com"],
+            send_order_email(
+                form.cleaned_data["name"],
+                form.cleaned_data["phone_number"],
+                products
             )
-            email.content_subtype = "html"
-            email.send()
             request.session["cart"] = []
-            return redirect(reverse("shop:index"))
+            return redirect(reverse("shop:success"))
         context = self.get_context_data(form=form)
         return self.render_to_response(context)
 
@@ -129,27 +148,40 @@ class ProductOrderView(generic.DetailView):
     template_name = "shop/order.html"
     slug_url_kwarg = "product_slug"
 
+    # def post(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     form = self.form_class(request.POST)
+    #     if form.is_valid():
+    #         name = form.cleaned_data["name"]
+    #         phone_number = form.cleaned_data["phone_number"]
+    #         context = {
+    #             "products": [self.object],
+    #             "name": name,
+    #             "phone_number": phone_number,
+    #         }
+    #         html_context = render_to_string("emails/order-for-email.html", context)
+    #         email = EmailMessage(
+    #             "Новый заказ!",
+    #             html_context,
+    #             "aquamarine.solotvino@gmail.com",
+    #             ["aquamarine.solotvino@gmail.com"],
+    #         )
+    #         email.content_subtype = "html"
+    #         email.send()
+    #         return redirect(reverse("shop:success"))
+    #     context = self.get_context_data(object=self.object, form=form)
+    #     return self.render_to_response(context)
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.form_class(request.POST)
         if form.is_valid():
-            name = form.cleaned_data["name"]
-            phone_number = form.cleaned_data["phone_number"]
-            context = {
-                "products": [self.object],
-                "name": name,
-                "phone_number": phone_number,
-            }
-            html_context = render_to_string("emails/order-for-email.html", context)
-            email = EmailMessage(
-                "Новый заказ!",
-                html_context,
-                "aquamarine.solotvino@gmail.com",
-                ["aquamarine.solotvino@gmail.com"],
+            send_order_email(
+                form.cleaned_data["name"],
+                form.cleaned_data["phone_number"],
+                [self.object]
             )
-            email.content_subtype = "html"
-            email.send()
-            return redirect(reverse("shop:index"))
+            return redirect(reverse("shop:success"))
         context = self.get_context_data(object=self.object, form=form)
         return self.render_to_response(context)
 
@@ -249,7 +281,6 @@ class ProductListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         brand_ids = self.get_queryset().values_list("brand_id", flat=True).distinct()
         context["brands"] = Brand.objects.filter(id__in=brand_ids)
-        context["categories"] = Category.objects.all().prefetch_related("sub_category")
         return context
 
 

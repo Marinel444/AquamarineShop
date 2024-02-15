@@ -15,6 +15,7 @@ from shop.views import (
     WishlistView,
     add_to_cart_view,
     CartListView,
+    success_view,
 )
 
 urlpatterns = [
@@ -41,6 +42,7 @@ urlpatterns = [
     path("wishlist/<int:product_pk>/", add_to_wishlist_view, name="add-wishlist"),
     path("cart/", CartListView.as_view(), name="cart-list"),
     path("cart/<int:product_pk>/", add_to_cart_view, name="add-cart"),
+    path("success/", success_view, name="success"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 app_name = "shop"

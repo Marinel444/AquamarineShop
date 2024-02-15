@@ -1,3 +1,6 @@
+from shop.views import Category
+
+
 def wishlist_count(request):
     wishlist_items = request.session.get("wishlist", [])
     return {
@@ -12,3 +15,8 @@ def cart_count(request):
         "cart_count": len(cart_items),
         "cart_items": cart_items,
     }
+
+
+def categories_for_html(request):
+    categories = Category.objects.all().prefetch_related("sub_category")
+    return {"categories": categories}

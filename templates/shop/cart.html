@@ -45,7 +45,8 @@
                         <tr class="cart__table--body__items">
                           <td class="cart__table--body__list">
                             <div class="cart__product d-flex align-items-center">
-                              <a href="{% url 'shop:add-cart' product_pk=product.pk %}" class="cart__remove--btn" aria-label="search button" type="button">
+                              <a href="{% url 'shop:add-cart' product_pk=product.pk %}" class="cart__remove--btn"
+                                 aria-label="search button" type="button">
                                 <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                      width="16px"
                                      height="16px">
@@ -70,9 +71,9 @@
                           <td class="cart__table--body__list">
                             <span class="cart__price">
                               {% if product.sale %}
-                              {{ product.sale }}
+                                {{ product.sale }}
                               {% else %}
-                              {{ product.price }}
+                                {{ product.price }}
                               {% endif %} грн.
                             </span>
                           </td>
@@ -89,17 +90,21 @@
                               </button>
                             </div>
                           </td>
-                          
+
                         </tr>
                       {% endfor %}
                       </tbody>
-                    {% else %}
-                      <h4 style="display: flex; justify-content: center; color: red;">
-                        Ваш кошик порожній
-                      </h4>
-                      <br>
                     {% endif %}
+
                   </table>
+                  {% if cart_items %}
+                  {% else %}
+                    <br>
+                    <h4 style="display: flex; justify-content: center; color: red;">
+                      Ваш кошик порожній
+                    </h4>
+
+                  {% endif %}
                   <div class="continue__shopping d-flex justify-content-between">
                     <a class="continue__shopping--link" href="{% url 'shop:shop-list' %}">Продовжити покупки</a>
 

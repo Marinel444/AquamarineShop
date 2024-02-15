@@ -44,11 +44,13 @@
                     <tr class="cart__table--body__items">
                       <td class="cart__table--body__list">
                         <div class="cart__product d-flex align-items-center">
-                          <a href="{% url 'shop:add-wishlist' product_pk=product.pk %}" class="cart__remove--btn" aria-label="search button" type="button">
+                          <a href="{% url 'shop:add-wishlist' product_pk=product.pk %}" class="cart__remove--btn"
+                             aria-label="search button" type="button">
                             <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16px"
                                  height="16px">
                               <path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z"/>
-                            </svg></a>
+                            </svg>
+                          </a>
                           <div class="cart__thumbnail">
                             <a href="{% url 'shop:product-detail' product_slug=product.slug %}"><img
                                     class="border-radius-5"
@@ -69,15 +71,26 @@
                           {{ product.price }}{% endif %} грн.</span>
                       </td>
                       <td class="cart__table--body__list text-right">
-                        <a class="wishlist__cart--btn primary__btn" href="cart.html">Додати до кошику</a>
+                        <a class="wishlist__cart--btn primary__btn"
+                           href="{% url 'shop:add-cart' product_pk=product.pk %}">
+                          {% if product.pk in cart_items %}
+                            Видалити з кошика
+                          {% else %}
+                            Додати до кошику
+                          {% endif %}
+                        </a>
                       </td>
                     </tr>
                     </tbody>
                   {% endfor %}
-                {% else %}
-                  <h3 style="display: flex; justify-content: center; color: red;">Немає доданого товару</h3>
                 {% endif %}
+
               </table>
+              {% if object_list %}
+              {% else %}
+                <br>
+                <h3 style="display: flex; justify-content: center; color: red;">Немає доданого товару</h3>
+              {% endif %}
 
               <div class="continue__shopping d-flex justify-content-between">
                 <a class="continue__shopping--link" href="{% url 'shop:shop-list' %}">Продовжити покупки</a>
