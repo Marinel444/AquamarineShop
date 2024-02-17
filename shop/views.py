@@ -1,14 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import send_mail
 from django.db.models import Q, Prefetch
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
 from shop.forms import ProductForm, PhotoFormSet, ContactForm, OrderForm
-from shop.models import Product, Brand, Category
+from shop.models import Product, Brand, Category, InstagramPost
 from shop.utils import send_order_email
 
 
@@ -22,8 +21,10 @@ def index(request):
                 to_attr="featured_products")
         )
     )
+    instagram_posts = InstagramPost.objects.all()
     context = {
         "categories": categories,
+        "instagram_posts": instagram_posts,
     }
     return render(request, "index.html", context)
 
@@ -97,31 +98,6 @@ class CartListView(generic.ListView):
             queryset = Product.objects.none()
         return queryset
 
-    # def post(self, request, *args, **kwargs):
-    #     products = self.get_queryset()
-    #     form = self.form_class(request.POST)
-    #     if form.is_valid():
-    #         name = form.cleaned_data["name"]
-    #         phone_number = form.cleaned_data["phone_number"]
-    #         context = {
-    #             "products": products,
-    #             "name": name,
-    #             "phone_number": phone_number,
-    #         }
-    #         html_context = render_to_string("emails/order-for-email.html", context)
-    #         email = EmailMessage(
-    #             "Новый заказ!",
-    #             html_context,
-    #             "aquamarine.solotvino@gmail.com",
-    #             ["aquamarine.solotvino@gmail.com"],
-    #         )
-    #         email.content_subtype = "html"
-    #         email.send()
-    #         request.session["cart"] = []
-    #         return redirect(reverse("shop:success"))
-    #     context = self.get_context_data(form=form)
-    #     return self.render_to_response(context)
-
     def post(self, request, *args, **kwargs):
         products = self.get_queryset()
         form = self.form_class(request.POST)
@@ -148,41 +124,17 @@ class ProductOrderView(generic.DetailView):
     template_name = "shop/order.html"
     slug_url_kwarg = "product_slug"
 
-    # def post(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     form = self.form_class(request.POST)
-    #     if form.is_valid():
-    #         name = form.cleaned_data["name"]
-    #         phone_number = form.cleaned_data["phone_number"]
-    #         context = {
-    #             "products": [self.object],
-    #             "name": name,
-    #             "phone_number": phone_number,
-    #         }
-    #         html_context = render_to_string("emails/order-for-email.html", context)
-    #         email = EmailMessage(
-    #             "Новый заказ!",
-    #             html_context,
-    #             "aquamarine.solotvino@gmail.com",
-    #             ["aquamarine.solotvino@gmail.com"],
-    #         )
-    #         email.content_subtype = "html"
-    #         email.send()
-    #         return redirect(reverse("shop:success"))
-    #     context = self.get_context_data(object=self.object, form=form)
-    #     return self.render_to_response(context)
-
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        product = self.get_object()
         form = self.form_class(request.POST)
         if form.is_valid():
             send_order_email(
                 form.cleaned_data["name"],
                 form.cleaned_data["phone_number"],
-                [self.object]
+                [product]
             )
             return redirect(reverse("shop:success"))
-        context = self.get_context_data(object=self.object, form=form)
+        context = self.get_context_data(object=product, form=form)
         return self.render_to_response(context)
 
 

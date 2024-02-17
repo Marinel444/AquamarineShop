@@ -1,6 +1,13 @@
 from django.contrib import admin
 
-from shop.models import Product, Category, SubCategory, Brand, Country, Photo
+from shop.models import (
+    Product,
+    Category,
+    SubCategory,
+    Brand,
+    Country,
+    Photo,
+    InstagramPost)
 
 
 @admin.register(Product)
@@ -26,3 +33,4 @@ class PhotoAdmin(admin.ModelAdmin):
 admin.site.register(Category)
 admin.site.register(Brand)
 admin.site.register(Country)
+admin.site.register(InstagramPost)

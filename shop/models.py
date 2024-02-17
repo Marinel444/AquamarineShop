@@ -130,3 +130,8 @@ class Photo(models.Model):
     class Meta:
         verbose_name = "Фото"
         verbose_name_plural = "Фотографий"
+
+
+class InstagramPost(models.Model):
+    post_url = models.URLField(max_length=255)
+    image = models.ImageField(upload_to=f"instagram_photos/%Y")
