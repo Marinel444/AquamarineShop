@@ -22,6 +22,8 @@
     </section>
     <!-- End breadcrumb section -->
 
+    
+
     <section class="shop__section section--padding">
       <div class="container">
         <div class="row">
@@ -35,7 +37,8 @@
                         <div class="product__items product__list--items border-radius-5 d-flex align-items-center">
                           <div class="product__list--items__left d-flex align-items-center">
                             <div class="product__items--thumbnail product__list--items__thumbnail">
-                              <a class="product__items--link" href="{% url 'shop:product-detail' slug=product.slug %}">
+                              <a class="product__items--link"
+                                 href="{% url 'shop:product-detail' product_slug=product.slug %}">
                                 {% for photo in product.photo_set.all|slice:":2" %}
                                   {% if forloop.counter == 1 %}
                                     <img class="product__items--img product__primary--img"
@@ -54,7 +57,7 @@
                             </div>
                             <div class="product__list--items__content">
                               <h4 class="product__list--items__content--title mb-15"><a
-                                      href="{% url 'shop:product-detail' slug=product.slug %}">{{ product.name }}</a>
+                                      href="{% url 'shop:product-detail' product_slug=product.slug %}">{{ product.name }}</a>
                               </h4>
                               <p class="product__list--items__content--desc m-0">
                                 <b>Країнавиробник: </b> {{ product.country.name }}<br>
@@ -171,7 +174,7 @@
                     <div class="col-lg-6 col-md-6">
                       <div class="contact__form--list mb-20">
                         <label class="contact__form--label" for="id_name"
-                                {% if form.name.errors %}style="color: red"{% endif %}>Ім'я <span
+                               {% if form.name.errors %}style="color: red"{% endif %}>Ім'я <span
                                 class="contact__form--label__star">*</span></label>
                         <input class="contact__form--input" name="name" id="id_name" placeholder="Ім'я"
                                type="text">
@@ -180,7 +183,7 @@
                     <div class="col-lg-6 col-md-6">
                       <div class="contact__form--list mb-20">
                         <label class="contact__form--label" for="id_phone_number"
-                                {% if form.phone_number.errors %}style="color: red"{% endif %}>Номер
+                               {% if form.phone_number.errors %}style="color: red"{% endif %}>Номер
                           телефону <span
                                   class="contact__form--label__star">*</span></label>
                         <input class="contact__form--input" name="phone_number" id="id_phone_number"

@@ -32,11 +32,12 @@
             <div id="product_list" class="tab_pane active show">
               <div class="product__section--inner">
                 <div class="row row-cols-1 mb--n30">
+                {% for product in products %}
                   <div class="col mb-30">
                     <div class="product__items product__list--items border-radius-5 d-flex align-items-center">
                       <div class="product__list--items__left d-flex align-items-center">
                         <div class="product__items--thumbnail product__list--items__thumbnail">
-                          <a class="product__items--link" href="http://127.0.0.1:8000{% url 'shop:product-detail' slug=product.slug %}">
+                          <a class="product__items--link" href="http://127.0.0.1:8000{% url 'shop:product-detail' product_slug=product.slug %}">
                             {% for photo in product.photo_set.all|slice:":1" %}
                               <img class="product__items--img product__primary--img"
                                    src="http://127.0.0.1:8000{{ photo.image.url }}" alt="product-img">
@@ -45,7 +46,7 @@
                         </div>
                         <div class="product__list--items__content">
                           <h4 class="product__list--items__content--title mb-15"><a
-                                  href="http://127.0.0.1:8000{% url 'shop:product-detail' slug=product.slug %}">{{ product.name }}"</a>
+                                  href="http://127.0.0.1:8000{% url 'shop:product-detail' product_slug=product.slug %}">{{ product.name }}"</a>
                           </h4>
                           <p class="product__list--items__content--desc m-0">
                             <b>Країнавиробник: </b> {{ product.country.name }}<br>
@@ -62,7 +63,11 @@
                           </p>
                         </div>
                       </div>
-                      <div class="product__list--items__right">
+                      
+                    </div>
+                  </div>
+                {% endfor %}
+                <div class="product__list--items__right">
                         <h4>Данные клиента</h4>
                         <p>
                           Имя: <br> <b>{{ name }}</b>
@@ -71,8 +76,6 @@
                           <b>{{ phone_number }}</b>
                         </p>
                       </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

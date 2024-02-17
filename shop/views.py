@@ -1,22 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import send_mail
 from django.db.models import Q, Prefetch
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
 from shop.forms import ProductForm, PhotoFormSet, ContactForm, OrderForm
-from shop.models import Product, Brand, Category
-
-
-def order_mail(request):
-    context = {
-        "product": Product.objects.get(pk=1),
-        "name": "Marinel",
-        "phone_number": "+380978907444",
-    }
-    return render(request, 'emails/order-for-email.html', context)
+from shop.models import Product, Brand, Category, InstagramPost
+from shop.utils import send_order_email
 
 
 def index(request):
@@ -29,10 +21,36 @@ def index(request):
                 to_attr="featured_products")
         )
     )
+    instagram_posts = InstagramPost.objects.all()
     context = {
         "categories": categories,
+        "instagram_posts": instagram_posts,
     }
     return render(request, "index.html", context)
+
+
+def success_view(request):
+    return render(request, "shop/success.html")
+
+
+def toggle_item_session(request, product_pk, session_key):
+    session_list = request.session.get(session_key, [])
+    if product_pk in session_list:
+        session_list.remove(product_pk)
+    else:
+        session_list.append(product_pk)
+
+    request.session[session_key] = session_list
+    redirect_url = request.META.get("HTTP_REFERER", "/")
+    return HttpResponseRedirect(redirect_url)
+
+
+def add_to_wishlist_view(request, product_pk):
+    return toggle_item_session(request, product_pk, "wishlist")
+
+
+def add_to_cart_view(request, product_pk):
+    return toggle_item_session(request, product_pk, "cart")
 
 
 class ContactView(generic.edit.FormView):
@@ -63,6 +81,38 @@ class ContactView(generic.edit.FormView):
         return super().form_valid(form)
 
 
+class CartListView(generic.ListView):
+    model = Product
+    form_class = OrderForm
+    template_name = "shop/cart.html"
+
+    def get_queryset(self):
+        cart = self.request.session.get("cart", [])
+        if cart:
+            queryset = (
+                Product.objects.filter(pk__in=cart)
+                .select_related("country", "brand")
+                .prefetch_related("photo_set")
+            )
+        else:
+            queryset = Product.objects.none()
+        return queryset
+
+    def post(self, request, *args, **kwargs):
+        products = self.get_queryset()
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            send_order_email(
+                form.cleaned_data["name"],
+                form.cleaned_data["phone_number"],
+                products
+            )
+            request.session["cart"] = []
+            return redirect(reverse("shop:success"))
+        context = self.get_context_data(form=form)
+        return self.render_to_response(context)
+
+
 class ProductOrderView(generic.DetailView):
     model = Product
     form_class = OrderForm
@@ -72,29 +122,19 @@ class ProductOrderView(generic.DetailView):
         .prefetch_related("photo_set")
     )
     template_name = "shop/order.html"
+    slug_url_kwarg = "product_slug"
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        product = self.get_object()
         form = self.form_class(request.POST)
         if form.is_valid():
-            name = form.cleaned_data["name"]
-            phone_number = form.cleaned_data["phone_number"]
-            context = {
-                "product": self.object,
-                "name": name,
-                "phone_number": phone_number,
-            }
-            html_context = render_to_string("emails/order-for-email.html", context)
-            email = EmailMessage(
-                "Новый заказ!",
-                html_context,
-                "aquamarine.solotvino@gmail.com",
-                ["aquamarine.solotvino@gmail.com"],
+            send_order_email(
+                form.cleaned_data["name"],
+                form.cleaned_data["phone_number"],
+                [product]
             )
-            email.content_subtype = "html"
-            email.send()
-            return redirect(reverse("shop:index"))
-        context = self.get_context_data(object=self.object, form=form)
+            return redirect(reverse("shop:success"))
+        context = self.get_context_data(object=product, form=form)
         return self.render_to_response(context)
 
 
@@ -129,6 +169,7 @@ class ProductCreateView(LoginRequiredMixin, ProductFormMixin, generic.CreateView
     form_class = ProductForm
     template_name = "admin_page/create-product.html"
     success_url = reverse_lazy("shop:shop-list")
+    slug_url_kwarg = "product_slug"
 
 
 class ProductUpdateView(LoginRequiredMixin, ProductFormMixin, generic.UpdateView):
@@ -136,12 +177,14 @@ class ProductUpdateView(LoginRequiredMixin, ProductFormMixin, generic.UpdateView
     form_class = ProductForm
     template_name = "admin_page/create-product.html"
     success_url = reverse_lazy("shop:shop-list")
+    slug_url_kwarg = "product_slug"
 
 
 class ProductDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Product
     template_name = "admin_page/confirm-delete-product.html"
     success_url = reverse_lazy("shop:shop-list")
+    slug_url_kwarg = "product_slug"
 
 
 class ProductDetailView(generic.DetailView):
@@ -152,6 +195,7 @@ class ProductDetailView(generic.DetailView):
         .prefetch_related("photo_set")
     )
     template_name = "shop/product-detail.html"
+    slug_url_kwarg = "product_slug"
 
 
 class ProductListView(generic.ListView):
@@ -165,11 +209,14 @@ class ProductListView(generic.ListView):
             .select_related("category", "sub_category", "country", "brand")
             .prefetch_related("photo_set")
         )
-        subcategory_slug = self.kwargs.get("slug")
+        category_slug = self.kwargs.get("category_slug")
+        subcategory_slug = self.kwargs.get("subcategory_slug")
         search_query = self.request.GET.get("search")
         brand_query = self.request.GET.get("brand_name")
         min_price = self.request.GET.get("min_price")
         max_price = self.request.GET.get("max_price")
+        if category_slug:
+            queryset = queryset.filter(category__slug=category_slug)
         if subcategory_slug:
             queryset = queryset.filter(sub_category__slug=subcategory_slug)
         if search_query:
@@ -186,7 +233,6 @@ class ProductListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         brand_ids = self.get_queryset().values_list("brand_id", flat=True).distinct()
         context["brands"] = Brand.objects.filter(id__in=brand_ids)
-        context["categories"] = Category.objects.all().prefetch_related("sub_category")
         return context
 
 
@@ -203,4 +249,21 @@ class Search(generic.ListView):
             .select_related("category", "sub_category", "country", "brand")
             .prefetch_related("photo_set")
         )
+        return queryset
+
+
+class WishlistView(generic.ListView):
+    model = Product
+    template_name = "shop/wishlist.html"
+
+    def get_queryset(self):
+        wishlist = self.request.session.get("wishlist", [])
+        if wishlist:
+            queryset = (
+                Product.objects.filter(pk__in=wishlist)
+                .select_related("country", "brand")
+                .prefetch_related("photo_set")
+            )
+        else:
+            queryset = Product.objects.none()
         return queryset
