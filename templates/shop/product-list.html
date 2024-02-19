@@ -83,8 +83,8 @@
           {% for category in categories %}
             <li class="widget__categories--menu__list">
               <label class="widget__categories--menu__label d-flex align-items-center">
-                <img class="widget__categories--menu__img" src="{% static 'img/product/small-product1.webp' %}"
-                     alt="categories-img">
+                <img class="widget__categories--menu__img" src="{{ category.photo.url }}"
+                     alt="{% static 'img/product/small-product1.webp' %}">
                 <span class="widget__categories--menu__text">{{ category.name }}</span>
                 <svg class="widget__categories--menu__arrowdown--icon" xmlns="http://www.w3.org/2000/svg" width="12.355"
                      height="8.394">
@@ -207,8 +207,8 @@
                   {% for category in categories %}
                     <li class="widget__categories--menu__list">
                       <label class="widget__categories--menu__label d-flex align-items-center">
-                        <img class="widget__categories--menu__img" src="{% static 'img/product/small-product1.webp' %}"
-                             alt="categories-img">
+                        <img class="widget__categories--menu__img" src="{{ category.photo.url }}"
+                             alt="{% static 'img/product/small-product1.webp' %}">
                         <span class="widget__categories--menu__text">{{ category.name }}</span>
                         <svg class="widget__categories--menu__arrowdown--icon" xmlns="http://www.w3.org/2000/svg"
                              width="12.355" height="8.394">
