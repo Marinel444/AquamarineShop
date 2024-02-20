@@ -4,12 +4,20 @@
 
 {% block content %}
   <style>
-      .product__items--img {
-          width: 282px;
-          height: 200px;
-          object-fit: cover;
-      }
-  </style>
+            .product__items--img {
+                width: 282px;
+                height: 280px;
+                object-fit: cover;
+            }
+
+            @media (max-width: 768px) {
+                .product__items--img {
+                    width: 282px;
+                    height: 200px;
+                    object-fit: cover;
+                }
+            }
+        </style>
   <!-- Start offcanvas filter sidebar -->
   <div class="offcanvas__filter--sidebar widget__area">
     <button type="button" class="offcanvas__filter--close">
