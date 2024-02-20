@@ -72,7 +72,7 @@ class Brand(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     category = models.ForeignKey(
         Category,
         related_name="product",
@@ -96,7 +96,7 @@ class Product(models.Model):
     )
     article = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True)
-    size = models.CharField(max_length=12, blank=True)
+    size = models.CharField(max_length=50, blank=True)
     color = models.CharField(max_length=100, blank=True)
     material = models.CharField(max_length=100, blank=True)
     is_active = models.BooleanField(default=True)
