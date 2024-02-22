@@ -8692,8 +8692,8 @@ input.quickview__value--number {
     content: "";
     width: 4.6rem;
     height: 6.9rem;
-    background-image: url(../img/icon/filter-img.PNG);
-    background-repeat: no-repeat;
+    /*background-image: url(../img/icon/filter-img.PNG);
+    background-repeat: no-repeat;*/
     left: 0;
     top: 48%;
     -webkit-transform: translatey(-50%);

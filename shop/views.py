@@ -203,36 +203,55 @@ class ProductListView(generic.ListView):
     template_name = "shop/product-list.html"
     paginate_by = 9
 
+    def get_filters(self):
+        return {
+            "category_slug": self.kwargs.get("category_slug"),
+            "subcategory_slug": self.kwargs.get("subcategory_slug"),
+            "search_query": self.request.GET.get("search"),
+            "brand_query": self.request.GET.get("brand_name"),
+            "min_price": self.request.GET.get("min_price"),
+            "max_price": self.request.GET.get("max_price"),
+            "color_query": self.request.GET.get("color"),
+        }
+
     def get_queryset(self):
+        filters = self.get_filters()
         queryset = (
             Product.objects.all()
             .select_related("category", "sub_category", "country", "brand")
             .prefetch_related("photo_set")
         )
-        category_slug = self.kwargs.get("category_slug")
-        subcategory_slug = self.kwargs.get("subcategory_slug")
-        search_query = self.request.GET.get("search")
-        brand_query = self.request.GET.get("brand_name")
-        min_price = self.request.GET.get("min_price")
-        max_price = self.request.GET.get("max_price")
-        if category_slug:
-            queryset = queryset.filter(category__slug=category_slug)
-        if subcategory_slug:
-            queryset = queryset.filter(sub_category__slug=subcategory_slug)
-        if search_query:
-            queryset = queryset.filter(name__icontains=search_query)
-        if brand_query:
-            queryset = queryset.filter(brand__name__icontains=brand_query)
-        if min_price:
-            queryset = queryset.filter(price__gte=min_price)
-        if max_price:
-            queryset = queryset.filter(price__lte=max_price)
+        if filters["category_slug"]:
+            queryset = queryset.filter(category__slug=filters["category_slug"])
+        if filters["subcategory_slug"]:
+            queryset = queryset.filter(sub_category__slug=filters["subcategory_slug"])
+        if filters["search_query"]:
+            queryset = queryset.filter(name__icontains=filters["search_query"])
+        if filters["brand_query"]:
+            queryset = queryset.filter(brand__name__icontains=filters["brand_query"])
+        if filters["min_price"]:
+            queryset = queryset.filter(price__gte=filters["min_price"])
+        if filters["max_price"]:
+            queryset = queryset.filter(price__lte=filters["max_price"])
+        if filters["color_query"]:
+            queryset = queryset.filter(color__icontains=filters["color_query"])
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        brand_ids = self.get_queryset().values_list("brand_id", flat=True).distinct()
-        context["brands"] = Brand.objects.filter(id__in=brand_ids)
+        filters = self.get_filters()
+        brands = Brand.objects.all()
+        colors = Product.objects.all()
+
+        if filters["category_slug"]:
+            brands = brands.filter(product__category__slug=filters["category_slug"]).distinct()
+            colors = colors.filter(category__slug=filters["category_slug"]).distinct()
+        if filters["subcategory_slug"]:
+            brands = brands.filter(product__sub_category__slug=filters["subcategory_slug"]).distinct()
+            colors = colors.filter(sub_category__slug=filters["subcategory_slug"]).distinct()
+
+        context["brands"] = brands
+        context["colors"] = colors.values_list("color", flat=True).distinct().order_by("color")
         return context
 
 
