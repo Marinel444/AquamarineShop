@@ -346,7 +346,7 @@
                     <div class="row row-cols-xxl-4 row-cols-xl-3 row-cols-lg-3 row-cols-md-3 row-cols-2 mb--n30">
                       {% for product in object_list %}
                         <div class="col mb-30">
-                          <div class="product__items ">
+                          <div class="product__items " style="border: 1px solid #b4b2b2;">
                             <div class="product__items--thumbnail">
                               <a class="product__items--link"
                                  href="{% url 'shop:product-detail' product_slug=product.slug %}">
