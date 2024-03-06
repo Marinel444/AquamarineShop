@@ -22,4 +22,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", index, name="index"),
     path("", include("shop.urls", namespace="shop")),
+    path("api/v1/", include("api.urls", namespace="api")),
+
 ]
