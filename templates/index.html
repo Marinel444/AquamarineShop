@@ -108,7 +108,7 @@
             <div id="{{ category.slug }}" class="tab_pane {% if forloop.first %}active show{% endif %}">
               <div class="product__section--inner">
                 <div class="row row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2 mb--n30">
-                  {% for product in category.featured_products %}
+                  {% for product in category.featured_products|slice:":5" %}
                     <div class="col mb-30">
                       <div class="product__items " style="border: 1px solid #b4b2b2;">
                         <div class="product__items--thumbnail">
