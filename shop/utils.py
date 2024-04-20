@@ -2,11 +2,12 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
 
-def send_order_email(name, phone_number, products, email_template="emails/order-for-email.html"):
+def send_order_email(name, phone_number, location, products, email_template="emails/order-for-email.html"):
     context = {
         "products": products,
         "name": name,
         "phone_number": phone_number,
+        "location": location,
     }
     html_content = render_to_string(email_template, context)
     email = EmailMessage(

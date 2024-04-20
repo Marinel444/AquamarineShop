@@ -19,6 +19,7 @@ class ContactForm(forms.Form):
 class OrderForm(forms.Form):
     name = forms.CharField(max_length=100)
     phone_number = forms.CharField(max_length=14)
+    location = forms.CharField(max_length=255)
 
 
 PhotoFormSet = forms.inlineformset_factory(Product, Photo, fields=("image",), extra=9)
