@@ -15,8 +15,8 @@
                     <div class="col">
                       <div class="slider__content">
                         <p class="slider__content--desc desc1 text-white mb-15">Aquamarine</p>
-                        <h2 class="slider__content--maintitle text-white h1">Розкішні душові<br>
-                          меблі</h2>
+                        <h2 class="slider__content--maintitle text-white h1">Розкішні меблі для<br>
+                          ванни</h2>
                         <p class="slider__content--desc text-white mb-35 d-sm-2-none">Інноваційні унітази <br>
                           Дизайнерські ванни</p>
                         <a class="slider__content--btn primary__btn" href="{% url 'shop:shop-list' %}">Каталог</a>
@@ -108,7 +108,7 @@
             <div id="{{ category.slug }}" class="tab_pane {% if forloop.first %}active show{% endif %}">
               <div class="product__section--inner">
                 <div class="row row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2 mb--n30">
-                  {% for product in category.featured_products %}
+                  {% for product in category.featured_products|slice:":5" %}
                     <div class="col mb-30">
                       <div class="product__items " style="border: 1px solid #b4b2b2;">
                         <div class="product__items--thumbnail">

@@ -22,7 +22,6 @@
     </section>
     <!-- End breadcrumb section -->
 
-    
 
     <section class="shop__section section--padding">
       <div class="container">
@@ -159,8 +158,8 @@
     <section class="contact__section section--padding">
       <div class="container">
         <div class="section__heading mb-40">
-          <h2 class="section__heading--maintitle contact__section--hrading mb-10">Залишіть свої дані і ми зв'яжемося з
-            вами</h2>
+          <h2 class="section__heading--maintitle contact__section--hrading mb-10">Для покупки залиште свої дані, і ми
+            зв'яжемося з вами</h2>
 
         </div>
         <div class="main__contact--area">
@@ -188,6 +187,16 @@
                                   class="contact__form--label__star">*</span></label>
                         <input class="contact__form--input" name="phone_number" id="id_phone_number"
                                placeholder="Номер телефону"
+                               type="text">
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                      <div class="contact__form--list mb-20">
+                        <label class="contact__form--label" for="id_location"
+                               {% if form.location.errors %}style="color: red"{% endif %}>Адреса доставки <span
+                                class="contact__form--label__star">*</span></label>
+                        <input class="contact__form--input" name="location" id="id_location"
+                               placeholder="Адреса доставки"
                                type="text">
                       </div>
                     </div>

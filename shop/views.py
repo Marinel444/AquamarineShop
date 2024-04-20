@@ -99,17 +99,19 @@ class CartListView(generic.ListView):
         return queryset
 
     def post(self, request, *args, **kwargs):
-        products = self.get_queryset()
+        self.object_list = self.get_queryset()
         form = self.form_class(request.POST)
         if form.is_valid():
             send_order_email(
                 form.cleaned_data["name"],
                 form.cleaned_data["phone_number"],
-                products
+                form.cleaned_data["location"],
+                self.object_list
             )
             request.session["cart"] = []
             return redirect(reverse("shop:success"))
-        context = self.get_context_data(form=form)
+
+        context = self.get_context_data(form=form, object_list=self.object_list)
         return self.render_to_response(context)
 
 
@@ -125,16 +127,17 @@ class ProductOrderView(generic.DetailView):
     slug_url_kwarg = "product_slug"
 
     def post(self, request, *args, **kwargs):
-        product = self.get_object()
+        self.object = self.get_object()
         form = self.form_class(request.POST)
         if form.is_valid():
             send_order_email(
                 form.cleaned_data["name"],
                 form.cleaned_data["phone_number"],
-                [product]
+                form.cleaned_data["location"],
+                [self.object]
             )
             return redirect(reverse("shop:success"))
-        context = self.get_context_data(object=product, form=form)
+        context = self.get_context_data(object=self.object, form=form)
         return self.render_to_response(context)
 
 
