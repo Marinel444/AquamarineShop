@@ -220,7 +220,7 @@ class ProductListView(generic.ListView):
     def get_queryset(self):
         filters = self.get_filters()
         queryset = (
-            Product.objects.all()
+            Product.objects.filter(is_active=True)
             .select_related("category", "sub_category", "country", "brand")
             .prefetch_related("photo_set")
         )

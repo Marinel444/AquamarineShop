@@ -66,8 +66,12 @@
                               </h3>
                             <div class="product__items">
                               <h5>Артикул: <b>{{ product.article }}</b></h5> <br>
-                              
                             </div>
+                            {% if not product.is_active %}
+                            <div class="product__items">
+                              <h4 style="color: red">Нет в наличий</b></h4> <br>
+                            </div>
+                            {% endif %}
                               <div class="product__items--price">
                                 {% if product.sale %}
                                   <span class="current__price">{{ product.sale }} грн.</span>
